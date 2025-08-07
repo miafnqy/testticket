@@ -32,6 +32,31 @@ it('a user can be logged in', function () {
         ]);
 });
 
+it ('a user can be logged out', function () {
+    $user = \App\Models\User::factory()->create();
+
+    $response = $this->post('/api/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $token = $response->json('data')['token'];
+
+    $this->assertDatabaseHas('personal_access_tokens', [
+        'tokenable_id' => $user->id,
+    ]);
+
+    $this->withHeaders([
+        'Authorization' => 'Bearer ' . $token,
+        'Accept' => 'application/json',
+    ])->postJson('/api/logout')
+        ->assertStatus(200);
+
+    $this->assertDatabaseMissing('personal_access_tokens', [
+        'tokenable_id' => $user->id,
+    ]);
+});
+
 
 
 
