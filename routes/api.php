@@ -1,12 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Http\Request;
+use \App\Http\Controllers\Api\UsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::get('/users', function (Request $request) {
-    return \App\Models\User::all();
-})->middleware('auth:sanctum');
+Route::apiResource('users', UsersController::class)->middleware('auth:sanctum');
