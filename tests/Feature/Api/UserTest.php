@@ -48,6 +48,7 @@ it ('a user can create a new user', function () {
     $this->postJson('/api/users', [
         'name' => fake()->name,
         'email' => fake()->unique()->safeEmail,
+        'role_id' => \App\Models\Role::factory()->create()->id,
     ])
         ->assertStatus(Response::HTTP_CREATED)
         ->assertJsonStructure([

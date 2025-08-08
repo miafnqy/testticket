@@ -27,7 +27,7 @@ class UsersController extends Controller
         $request->mergeIfMissing([
             'password' => Hash::make('password')
         ]);
-        $user = User::create($request->only(['name', 'email', 'password']));
+        $user = User::create($request->only(['name', 'email', 'role_id', 'password']));
 
         return new UserResource($user);
     }
