@@ -18,7 +18,7 @@ class RoleFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->jobTitle(),
-            'priority' => $this->faker->numberBetween(0,9),
+            'priority' => $this->faker->numberBetween(1,9),
         ];
     }
 }

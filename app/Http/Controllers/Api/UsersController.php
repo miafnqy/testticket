@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreUserRequest;
 use App\Http\Requests\Api\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +27,12 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        if ($request->user()->role->name != 'admin' && $request->user()->role->name != 'manager') {
+        if ($request->user()->role->isNotAdmin() && $request->user()->role->name != 'manager') {
+            return response()->json([], Response::HTTP_FORBIDDEN);
+        }
+
+        // a non admin user tries to create an admin
+        if (Role::find($request->post('role_id'))->isAdmin() && $request->user()->role->isNotAdmin()) {
             return response()->json([], Response::HTTP_FORBIDDEN);
         }
 

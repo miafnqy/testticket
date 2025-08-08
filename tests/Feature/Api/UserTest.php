@@ -48,14 +48,32 @@ it ('only authorized users can create a new user', function () {
 });
 
 it ('only an admin or a manager can create a new user', function () {
-    $user = User::factory()->for(Role::where('name', UserRole::USER->value)->first())->create();
+    $userRole = Role::where('name', UserRole::USER)->first();
+
+    $user = User::factory()->for(Role::where('name', $userRole->name)->first())->create();
 
     actingAs($user, 'sanctum');
 
     $this->postJson('/api/users', [
         'name' => fake()->name,
         'email' => fake()->unique()->safeEmail,
-        'role_id' => UserRole::USER->priority(),
+        'role_id' => $userRole->id,
+    ])
+        ->assertStatus(Response::HTTP_FORBIDDEN);
+});
+
+it ('only an admin can create a new admin user', function () {
+    $managerRole = Role::where('name', UserRole::MANAGER)->first();
+    $adminRole = Role::where('name', UserRole::ADMIN)->first();
+
+    $user = User::factory()->for($managerRole)->create();
+
+    actingAs($user, 'sanctum');
+
+    $this->postJson('/api/users', [
+        'name' => fake()->name,
+        'email' => fake()->unique()->safeEmail,
+        'role_id' => $adminRole->id,
     ])
         ->assertStatus(Response::HTTP_FORBIDDEN);
 });
