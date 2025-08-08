@@ -2,6 +2,13 @@
 
 use function Pest\Laravel\actingAs;
 use \Symfony\Component\HttpFoundation\Response;
+use \App\Models\User;
+use \App\Models\Role;
+use \App\Enums\UserRole;
+
+beforeEach(function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh --seed');
+});
 
 it('unauthorized users can\'t access /api/users', function () {
     $response = $this->get('/api/users', [
@@ -12,7 +19,7 @@ it('unauthorized users can\'t access /api/users', function () {
 });
 
 it ('/api/users endpoint returns a users list', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     actingAs($user, 'sanctum');
 
@@ -41,11 +48,20 @@ it ('only authorized users can create a new user', function () {
 });
 
 it ('only an admin or a manager can create a new user', function () {
-//    $user = \App\Models\User::factory()->create(['role_id' => ]);
+    $user = User::factory()->for(Role::where('name', UserRole::USER->value)->first())->create();
+
+    actingAs($user, 'sanctum');
+
+    $this->postJson('/api/users', [
+        'name' => fake()->name,
+        'email' => fake()->unique()->safeEmail,
+        'role_id' => UserRole::USER->priority(),
+    ])
+        ->assertStatus(Response::HTTP_FORBIDDEN);
 });
 
 it ('a user can create a new user', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->for(Role::where('name', UserRole::ADMIN->value)->first())->create();
 
     actingAs($user, 'sanctum');
 
@@ -68,7 +84,7 @@ it ('a user can create a new user', function () {
 });
 
 it ('unauthorized user can\'t update a user', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $this->putJson('/api/users/' . $user->id, [
         'name' => fake()->name . '_updated',
@@ -77,7 +93,7 @@ it ('unauthorized user can\'t update a user', function () {
 });
 
 it ('a user can update a user', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
     $originalName = $user->name;
 
     actingAs($user, 'sanctum');

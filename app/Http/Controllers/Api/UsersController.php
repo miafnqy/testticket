@@ -8,6 +8,7 @@ use App\Http\Requests\Api\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
 {
@@ -24,6 +25,10 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        if ($request->user()->role->name != 'admin' && $request->user()->role->name != 'manager') {
+            return response()->json([], Response::HTTP_FORBIDDEN);
+        }
+
         $request->mergeIfMissing([
             'password' => Hash::make('password')
         ]);

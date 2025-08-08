@@ -1,10 +1,11 @@
 <?php
 
 use Laravel\Sanctum\Sanctum;
+use \App\Models\User;
 
 it('a user can\'t be logged in with invalid credentials', function () {
 
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $response = $this->post('/api/login', [
         'email' => $user->email,
@@ -18,7 +19,7 @@ it('a user can\'t be logged in with invalid credentials', function () {
 });
 
 it('a user can be logged in', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $response = $this->post('/api/login', [
         'email' => $user->email,
@@ -33,7 +34,7 @@ it('a user can be logged in', function () {
 });
 
 it ('a user can be logged out', function () {
-    $user = \App\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $response = $this->post('/api/login', [
         'email' => $user->email,
