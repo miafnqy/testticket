@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
 use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,22 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = collect([
-            [
-                'name' => 'admin',
-                'priority' => 0
-            ],
-            [
-                'name' => 'manager',
-                'priority' => 1
-            ],
-            [
-                'name' => 'user',
-                'priority' => 2
-            ]
-        ])
+        $roles = collect(UserRole::cases())
             ->map(function ($role) {
-                return Role::factory()->create($role);
+                return Role::factory()->create(['name' => $role->value, 'priority' => $role->priority()]);
             });
 
          User::factory(100)->recycle($roles)->create();

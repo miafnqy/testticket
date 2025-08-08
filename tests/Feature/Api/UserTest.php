@@ -40,6 +40,10 @@ it ('only authorized users can create a new user', function () {
         ->assertStatus(Response::HTTP_UNAUTHORIZED);
 });
 
+it ('only an admin or a manager can create a new user', function () {
+//    $user = \App\Models\User::factory()->create(['role_id' => ]);
+});
+
 it ('a user can create a new user', function () {
     $user = \App\Models\User::factory()->create();
 
