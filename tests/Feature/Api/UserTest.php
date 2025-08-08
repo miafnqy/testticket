@@ -62,6 +62,19 @@ it ('a user can create a new user', function () {
         ]);
 });
 
+it ('a user can update a user', function () {
+    $user = \App\Models\User::factory()->create();
+    $originalName = $user->name;
+
+    actingAs($user, 'sanctum');
+
+    $response = $this->putJson('/api/users/' . $user->id, [
+        'name' => fake()->name . '_updated',
+    ]);
+
+    $this->assertNotEquals($originalName, $response->content('name'));
+});
+
 
 
 

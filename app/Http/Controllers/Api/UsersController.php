@@ -45,7 +45,9 @@ class UsersController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $user->update($request->only(['name', 'email']));
+
+        return new UserResource($user);
     }
 
     /**
