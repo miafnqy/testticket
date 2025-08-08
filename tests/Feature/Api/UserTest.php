@@ -62,6 +62,15 @@ it ('a user can create a new user', function () {
         ]);
 });
 
+it ('unauthorized user can\'t update a user', function () {
+    $user = \App\Models\User::factory()->create();
+
+    $this->putJson('/api/users/' . $user->id, [
+        'name' => fake()->name . '_updated',
+    ])
+        ->assertStatus(Response::HTTP_UNAUTHORIZED);
+});
+
 it ('a user can update a user', function () {
     $user = \App\Models\User::factory()->create();
     $originalName = $user->name;
