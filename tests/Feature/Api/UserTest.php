@@ -104,15 +104,15 @@ it ('only an admin can create a new admin user', function () {
         ->assertStatus(Response::HTTP_FORBIDDEN);
 });
 
-it ('a user can create a new user', function () {
-    $user = User::factory()->for(Role::find(UserRole::ADMIN))->create();
+it ('an admin can create a new user', function () {
+    $admin = User::factory()->for(Role::find(UserRole::ADMIN))->create();
 
-    actingAs($user, 'sanctum');
+    actingAs($admin, 'sanctum');
 
-    $this->postJson('/api/users', [
+    $response = $this->postJson('/api/users', [
         'name' => fake()->name,
         'email' => fake()->unique()->safeEmail,
-        'role_id' => \App\Models\Role::factory()->create()->id,
+        'role_id' => Role::factory()->create()->id,
     ])
         ->assertStatus(Response::HTTP_CREATED)
         ->assertJsonStructure([
@@ -125,6 +125,11 @@ it ('a user can create a new user', function () {
                 'updated_at',
             ]
         ]);
+    $this->assertDatabaseHas('users', [
+        'id' => $response['data']['id'],
+        'name' => $response['data']['name'],
+        'email' => $response['data']['email'],
+    ]);
 });
 
 it ('unauthorized user can\'t update a user', function () {
