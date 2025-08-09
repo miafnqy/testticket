@@ -15,7 +15,7 @@ it('unauthorized users can\'t access /api/users', function () {
         'Accept' => 'application/json',
     ]);
 
-    $response->assertStatus(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
+    $response->assertStatus(Response::HTTP_UNAUTHORIZED);
 });
 
 it ('/api/users endpoint returns a users list', function () {
@@ -44,7 +44,7 @@ it ('unauthorized user can\'t access /api/users/{id} endpoint', function () {
         'Accept' => 'application/json',
     ]);
 
-    $response->assertStatus(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
+    $response->assertStatus(Response::HTTP_UNAUTHORIZED);
 });
 
 it ('/api/users/{id} endpoint returns a user', function () {
@@ -173,6 +173,41 @@ it ('an admin can update any user', function () {
         'name' => fake()->name . '_updated',
     ])
         ->assertStatus(Response::HTTP_OK);
+});
+
+it ('unauthorized user can\'t delete a user', function () {
+    $this->deleteJson('/api/users/' . 1)
+        ->assertStatus(Response::HTTP_UNAUTHORIZED);
+});
+
+it ('a user can\'t delete another user', function () {
+    $user = User::factory()->create();
+    $anotherUser = User::factory()->create();
+
+    actingAs($user, 'sanctum');
+
+    $this->deleteJson('/api/users/' . $anotherUser->id)
+        ->assertStatus(Response::HTTP_FORBIDDEN);
+});
+
+it ('a user can delete a himself', function () {
+    $user = User::factory()->create();
+
+    actingAs($user, 'sanctum');
+    $this->deleteJson('/api/users/' . $user->id)
+        ->assertStatus(Response::HTTP_OK);
+    $this->assertDatabaseMissing('users', ['id' => $user->id]);
+});
+
+it ('an admin can delete any user', function () {
+    $admin = User::factory()->create(['role_id' => Role::where('name', UserRole::ADMIN)->first()]);
+    $manager = User::factory()->create(['role_id' => Role::where('name', UserRole::MANAGER)->first()]);
+
+    actingAs($admin, 'sanctum');
+
+    $this->deleteJson('/api/users/' . $manager->id)
+        ->assertStatus(Response::HTTP_OK);
+    $this->assertDatabaseMissing('users', ['id' => $manager->id]);
 });
 
 

@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Enums\UserRole;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
@@ -59,7 +58,8 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return false;
+        // The same rules as for update
+        return $this->update($user, $model);
     }
 
     /**
