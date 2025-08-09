@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\StoreRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -15,43 +16,22 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection(Role::paginate());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return RoleResource::collection(Role::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        if ($request->user()->cannot('create', Role::class)) {
-            return response()->json([
-                'message' => 'Only an admin can make user roles.'
-            ],
-                Response::HTTP_FORBIDDEN
-            );
-        }
+        $role = Role::create($request->only(['name', 'priority']));
+        return new RoleResource($role);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Role $role)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Role $role)
     {
         //
     }
