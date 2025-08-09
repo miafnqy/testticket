@@ -91,7 +91,6 @@ it ('only an admin or a manager can create a new user', function () {
 
 it ('only an admin can create a new admin user', function () {
     $managerRole = Role::find(UserRole::MANAGER);
-    $adminRole = Role::find(UserRole::ADMIN);
 
     $user = User::factory()->for($managerRole)->create();
 
@@ -100,7 +99,7 @@ it ('only an admin can create a new admin user', function () {
     $this->postJson('/api/users', [
         'name' => fake()->name,
         'email' => fake()->unique()->safeEmail,
-        'role_id' => $adminRole->id,
+        'role_id' => UserRole::ADMIN,
     ])
         ->assertStatus(Response::HTTP_FORBIDDEN);
 });
@@ -138,8 +137,8 @@ it ('unauthorized user can\'t update a user', function () {
 });
 
 it ('a user can\'t update another user', function () {
-    $user = User::factory()->create(['role_id' => Role::find(UserRole::USER)]);
-    $anotherUser = User::factory()->create(['role_id' => Role::find(UserRole::USER)]);
+    $user = User::factory()->create(['role_id' => UserRole::USER]);
+    $anotherUser = User::factory()->create(['role_id' => UserRole::USER]);
 
     actingAs($user, 'sanctum');
 
@@ -164,8 +163,8 @@ it ('a user can update himself', function () {
 });
 
 it ('an admin can update any user', function () {
-    $admin = User::factory()->create(['role_id' => Role::find(UserRole::ADMIN)]);
-    $user = User::factory()->create(['role_id' => Role::find(UserRole::USER)]);
+    $admin = User::factory()->create(['role_id' => UserRole::ADMIN]);
+    $user = User::factory()->create(['role_id' => UserRole::USER]);
 
     actingAs($admin, 'sanctum');
 
@@ -200,8 +199,8 @@ it ('a user can delete a himself', function () {
 });
 
 it ('an admin can delete any user', function () {
-    $admin = User::factory()->create(['role_id' => Role::find(UserRole::ADMIN)]);
-    $manager = User::factory()->create(['role_id' => Role::find(UserRole::MANAGER)]);
+    $admin = User::factory()->create(['role_id' => UserRole::ADMIN]);
+    $manager = User::factory()->create(['role_id' => UserRole::MANAGER]);
 
     actingAs($admin, 'sanctum');
 
