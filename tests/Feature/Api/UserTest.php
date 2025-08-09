@@ -106,7 +106,7 @@ it ('only an admin can create a new admin user', function () {
 });
 
 it ('a user can create a new user', function () {
-    $user = User::factory()->for(Role::where('name', UserRole::ADMIN->value)->first())->create();
+    $user = User::factory()->for(Role::where('name', UserRole::ADMIN)->first())->create();
 
     actingAs($user, 'sanctum');
 
@@ -138,8 +138,8 @@ it ('unauthorized user can\'t update a user', function () {
 });
 
 it ('a user can\'t update another user', function () {
-    $user = User::factory()->create(['role_id' => Role::where('name', UserRole::USER->value)->first()]);
-    $anotherUser = User::factory()->create(['role_id' => Role::where('name', UserRole::USER->value)->first()]);
+    $user = User::factory()->create(['role_id' => Role::where('name', UserRole::USER)->first()]);
+    $anotherUser = User::factory()->create(['role_id' => Role::where('name', UserRole::USER)->first()]);
 
     actingAs($user, 'sanctum');
 
@@ -164,8 +164,8 @@ it ('a user can update himself', function () {
 });
 
 it ('an admin can update any user', function () {
-    $admin = User::factory()->create(['role_id' => Role::where('name', UserRole::ADMIN->value)->first()]);
-    $user = User::factory()->create(['role_id' => Role::where('name', UserRole::USER->value)->first()]);
+    $admin = User::factory()->create(['role_id' => Role::where('name', UserRole::ADMIN)->first()]);
+    $user = User::factory()->create(['role_id' => Role::where('name', UserRole::USER)->first()]);
 
     actingAs($admin, 'sanctum');
 
