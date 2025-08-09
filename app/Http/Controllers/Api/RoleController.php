@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
@@ -13,7 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return Role::all();
+        return RoleResource::collection(Role::paginate());
     }
 
     /**
@@ -29,7 +31,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->user()->cannot('create', Role::class)) {
+            return response()->json([
+                'message' => 'Only an admin can make user roles.'
+            ],
+                Response::HTTP_FORBIDDEN
+            );
+        }
     }
 
     /**
