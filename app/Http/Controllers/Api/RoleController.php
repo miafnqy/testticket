@@ -34,7 +34,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+        return new RoleResource($role);
     }
 
     /**

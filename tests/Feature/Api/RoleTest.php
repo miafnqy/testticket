@@ -11,6 +11,11 @@ it('unauthorized users can\'t access /api/roles', function () {
         ->assertStatus(Response::HTTP_UNAUTHORIZED);
 });
 
+it('unauthorized users can\'t access /api/roles/{id}', function () {
+    $this->getJson('/api/roles/' . UserRole::USER->value)
+        ->assertStatus(Response::HTTP_UNAUTHORIZED);
+});
+
 it('/api/roles returns a list of roles', function () {
     $user = User::factory()->create();
 
@@ -27,6 +32,25 @@ it('/api/roles returns a list of roles', function () {
                     'created_at',
                     'updated_at',
                 ]
+            ]
+        ]);
+});
+
+it('/api/roles/{id} returns a single role', function () {
+    $user = User::factory()->create();
+    $role = Role::factory()->create();
+
+    actingAs($user, 'sanctum');
+
+    $this->getJson('/api/roles/' . $role->id)
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'priority',
+                'created_at',
+                'updated_at',
             ]
         ]);
 });
