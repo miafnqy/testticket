@@ -54,7 +54,7 @@ it('admins can create user roles', function () {
 
     actingAs($admin, 'sanctum');
 
-    $respose = $this->postJson('/api/roles', [
+    $response = $this->postJson('/api/roles', [
         'name' => fake()->unique()->jobTitle(),
         'priority' => fake()->numberBetween(1,9),
     ])
@@ -68,5 +68,45 @@ it('admins can create user roles', function () {
                 'updated_at',
             ]
         ]);
-    $this->assertDatabaseHas('roles', ['id' => $respose['data']['id']]);
+    $this->assertDatabaseHas('roles', ['id' => $response['data']['id']]);
+});
+
+it('users can\'t update user roles', function () {
+    $user = User::factory()->create();
+
+    actingAs($user, 'sanctum');
+
+    $this->putJson('/api/roles/' . UserRole::USER->value, [])
+        ->assertStatus(Response::HTTP_FORBIDDEN);
+});
+
+it('managers can\'t update user roles', function () {
+    $user = User::factory()->for(Role::find(UserRole::MANAGER))->create();
+
+    actingAs($user, 'sanctum');
+
+    $this->putJson('/api/roles/' . UserRole::USER->value, [])
+        ->assertStatus(Response::HTTP_FORBIDDEN);
+});
+
+it('admins can update user roles', function () {
+    $admin = User::factory()->for(Role::find(UserRole::ADMIN))->create();
+    $role = Role::factory()->create();
+
+    $newRoleName = fake()->unique()->jobTitle() . '_updated';
+
+    actingAs($admin, 'sanctum');
+
+    $response = $this->putJson('/api/roles/' . $role->id, [
+        'name' => $newRoleName,
+        'priority' => fake()->numberBetween(1,9),
+    ])
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJson([
+            'data' => [
+                'id' => $role->id,
+                'name' => $newRoleName
+            ]
+        ]);
+    $this->assertDatabaseHas('roles', ['id' => $role->id, 'name' => $newRoleName]);
 });
