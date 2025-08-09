@@ -54,7 +54,7 @@ it('admins can create user roles', function () {
 
     actingAs($admin, 'sanctum');
 
-    $this->postJson('/api/roles', [
+    $respose = $this->postJson('/api/roles', [
         'name' => fake()->unique()->jobTitle(),
         'priority' => fake()->numberBetween(1,9),
     ])
@@ -68,4 +68,5 @@ it('admins can create user roles', function () {
                 'updated_at',
             ]
         ]);
+    $this->assertDatabaseHas('roles', ['id' => $respose['data']['id']]);
 });
