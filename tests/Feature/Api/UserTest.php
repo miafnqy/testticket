@@ -163,6 +163,18 @@ it ('a user can update himself', function () {
     $this->assertNotEquals($originalName, $response->content('name'));
 });
 
+it ('an admin can update any user', function () {
+    $admin = User::factory()->create(['role_id' => Role::where('name', UserRole::ADMIN->value)->first()]);
+    $user = User::factory()->create(['role_id' => Role::where('name', UserRole::USER->value)->first()]);
+
+    actingAs($admin, 'sanctum');
+
+    $this->putJson('/api/users/' . $user->id, [
+        'name' => fake()->name . '_updated',
+    ])
+        ->assertStatus(Response::HTTP_OK);
+});
+
 
 
 

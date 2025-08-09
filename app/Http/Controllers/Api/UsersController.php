@@ -57,7 +57,7 @@ class UsersController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        if ($request->user()->id !== $user->id) {
+        if ($request->user()->id !== $user->id && $request->user()->role->name !== UserRole::ADMIN->value ) {
             return response()->json([], Response::HTTP_FORBIDDEN);
         }
 
