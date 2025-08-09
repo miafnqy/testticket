@@ -23,7 +23,7 @@ it ('/api/users endpoint returns a users list', function () {
 
     actingAs($user, 'sanctum');
 
-    $response = $this->get('/api/users')
+    $this->get('/api/users')
         ->assertStatus(200)
         ->assertJsonStructure([
             'data' => [
@@ -35,6 +35,33 @@ it ('/api/users endpoint returns a users list', function () {
                     'created_at',
                     'updated_at',
                 ]
+            ]
+        ]);
+});
+
+it ('unauthorized user can\'t access /api/users/{id} endpoint', function () {
+    $response = $this->get('/api/users/1', [
+        'Accept' => 'application/json',
+    ]);
+
+    $response->assertStatus(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
+});
+
+it ('/api/users/{id} endpoint returns a user', function () {
+    $user = User::factory()->create();
+
+    actingAs($user, 'sanctum');
+
+    $this->getJson('/api/users/' . $user->id)
+        ->assertStatus(200)
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'email_verified_at',
+                'created_at',
+                'updated_at',
             ]
         ]);
 });
