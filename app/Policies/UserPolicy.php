@@ -28,14 +28,14 @@ class UserPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, $roleId): bool
+    public function create(User $user, $request): bool
     {
-        if ($user->role->isNotAdmin() && $user->role->name != 'manager') {
+        if ($user->role->isNotAdmin() && $user->role->name !== UserRole::MANAGER->value) {
             return false;
         }
 
         // a non admin user tries to create an admin
-        if (Role::find($roleId)->isAdmin() && $user->role->isNotAdmin()) {
+        if (Role::find($request->post('role_id'))->isAdmin() && $user->role->isNotAdmin()) {
             return false;
         }
 

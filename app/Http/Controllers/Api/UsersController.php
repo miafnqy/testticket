@@ -27,7 +27,7 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        if ($request->user()->cannot('create', [User::class, $request->post('role_id')])) {
+        if ($request->user()->cannot('create', [User::class, $request])) {
             return response()->json([], Response::HTTP_FORBIDDEN);
         }
 
