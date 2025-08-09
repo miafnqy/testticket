@@ -110,3 +110,28 @@ it('admins can update user roles', function () {
         ]);
     $this->assertDatabaseHas('roles', ['id' => $role->id, 'name' => $newRoleName]);
 });
+
+it('unauthorized users can\'t delete user roles', function () {
+    $this->deleteJson('/api/roles/' . UserRole::USER->value)
+        ->assertStatus(Response::HTTP_UNAUTHORIZED);
+});
+
+it('non admins can\'t delete user roles', function () {
+    $manager = User::factory()->for(Role::find(UserRole::MANAGER))->create();
+
+    actingAs($manager, 'sanctum');
+
+    $this->deleteJson('/api/roles/' . UserRole::USER->value)
+        ->assertStatus(Response::HTTP_FORBIDDEN);
+});
+
+it('admins can delete user roles', function () {
+    $admin = User::factory()->for(Role::find(UserRole::ADMIN))->create();
+    $role = Role::factory()->create();
+
+    actingAs($admin, 'sanctum');
+
+    $this->deleteJson('/api/roles/' . $role->id)
+        ->assertStatus(Response::HTTP_OK);
+    $this->assertDatabaseMissing('roles', ['id' => $role->id]);
+});

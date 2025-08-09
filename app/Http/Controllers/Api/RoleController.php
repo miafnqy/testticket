@@ -52,6 +52,10 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        if (auth()->user()->role->isNotAdmin()) {
+            return response(['message' => 'You cannot delete this role.'], Response::HTTP_FORBIDDEN);
+        }
+
+        $role->delete();
     }
 }
