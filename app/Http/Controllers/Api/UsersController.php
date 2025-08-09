@@ -57,6 +57,10 @@ class UsersController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        if ($request->user()->id !== $user->id) {
+            return response()->json([], Response::HTTP_FORBIDDEN);
+        }
+
         $user->update($request->only(['name', 'email']));
 
         return new UserResource($user);

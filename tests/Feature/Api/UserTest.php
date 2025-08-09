@@ -137,7 +137,19 @@ it ('unauthorized user can\'t update a user', function () {
         ->assertStatus(Response::HTTP_UNAUTHORIZED);
 });
 
-it ('a user can update a user', function () {
+it ('a user can\'t update another user', function () {
+    $user = User::factory()->create(['role_id' => Role::where('name', UserRole::USER->value)->first()]);
+    $anotherUser = User::factory()->create(['role_id' => Role::where('name', UserRole::USER->value)->first()]);
+
+    actingAs($user, 'sanctum');
+
+    $this->putJson('/api/users/' . $anotherUser->id, [
+        'name' => fake()->name . '_updated',
+    ])
+        ->assertStatus(Response::HTTP_FORBIDDEN);
+});
+
+it ('a user can update himself', function () {
     $user = User::factory()->create();
     $originalName = $user->name;
 
@@ -145,7 +157,8 @@ it ('a user can update a user', function () {
 
     $response = $this->putJson('/api/users/' . $user->id, [
         'name' => fake()->name . '_updated',
-    ]);
+    ])
+        ->assertStatus(Response::HTTP_OK);
 
     $this->assertNotEquals($originalName, $response->content('name'));
 });
