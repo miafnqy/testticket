@@ -29,7 +29,7 @@ class UserPolicy
      */
     public function create(User $user, $request): bool
     {
-        if ($user->role->isNotAdmin() && $user->role->name !== UserRole::MANAGER->value) {
+        if ($user->role->isNotAdmin() && $user->role->id !== UserRole::MANAGER->value) {
             return false;
         }
 
@@ -46,7 +46,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        if ($user->role->name === UserRole::ADMIN->value) {
+        if ($user->role->id === UserRole::ADMIN->value) {
             return true;
         }
 

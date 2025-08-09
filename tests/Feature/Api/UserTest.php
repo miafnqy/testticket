@@ -106,7 +106,7 @@ it ('only an admin can create a new admin user', function () {
 });
 
 it ('a user can create a new user', function () {
-    $user = User::factory()->for(Role::where('name', UserRole::ADMIN)->first())->create();
+    $user = User::factory()->for(Role::find(UserRole::ADMIN))->create();
 
     actingAs($user, 'sanctum');
 
@@ -164,8 +164,8 @@ it ('a user can update himself', function () {
 });
 
 it ('an admin can update any user', function () {
-    $admin = User::factory()->create(['role_id' => Role::where('name', UserRole::ADMIN)->first()]);
-    $user = User::factory()->create(['role_id' => Role::where('name', UserRole::USER)->first()]);
+    $admin = User::factory()->create(['role_id' => Role::find(UserRole::ADMIN)]);
+    $user = User::factory()->create(['role_id' => Role::find(UserRole::USER)]);
 
     actingAs($admin, 'sanctum');
 

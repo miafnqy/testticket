@@ -5,12 +5,12 @@ namespace App\Enums;
 /**
  * The mostly based users roles
  */
-enum UserRole: string
+enum UserRole: int
 {
-    case ADMIN = 'admin';
-    case MANAGER = 'manager';
-    case MODERATOR = 'moderator';
-    case USER = 'user';
+    case ADMIN = 1;
+    case MANAGER = 2;
+    case MODERATOR = 3;
+    case USER = 4;
 
     public function priority(): int
     {

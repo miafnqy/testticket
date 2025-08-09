@@ -14,7 +14,7 @@ class Role extends Model
 
     public function isAdmin(): bool
     {
-        return $this->name === UserRole::ADMIN->value;
+        return $this->id === UserRole::ADMIN->value;
     }
 
     public function isNotAdmin(): bool
