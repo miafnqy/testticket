@@ -12,6 +12,16 @@ enum UserRole: int
     case MODERATOR = 3;
     case USER = 4;
 
+    public function name(): string
+    {
+        return match ($this) {
+            self::ADMIN => 'admin',
+            self::MANAGER => 'manager',
+            self::MODERATOR => 'moderator',
+            self::USER => 'user',
+        };
+    }
+
     public function priority(): int
     {
         return match ($this) {

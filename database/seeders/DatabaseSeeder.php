@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $roles = collect(UserRole::cases())
             ->map(function ($role) {
-                return Role::factory()->create(['name' => $role->value, 'priority' => $role->priority()]);
+                return Role::factory()->create(['name' => $role->name(), 'priority' => $role->priority()]);
             });
 
          User::factory(100)->recycle($roles)->create();
