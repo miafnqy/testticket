@@ -27,12 +27,7 @@ class UsersController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        if ($request->user()->role->isNotAdmin() && $request->user()->role->name != 'manager') {
-            return response()->json([], Response::HTTP_FORBIDDEN);
-        }
-
-        // a non admin user tries to create an admin
-        if (Role::find($request->post('role_id'))->isAdmin() && $request->user()->role->isNotAdmin()) {
+        if ($request->user()->cannot('create', [User::class, $request->post('role_id')])) {
             return response()->json([], Response::HTTP_FORBIDDEN);
         }
 
@@ -57,7 +52,8 @@ class UsersController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        if ($request->user()->id !== $user->id && $request->user()->role->name !== UserRole::ADMIN->value ) {
+        if($request->user()->canNot('update', $user))
+        {
             return response()->json([], Response::HTTP_FORBIDDEN);
         }
 
