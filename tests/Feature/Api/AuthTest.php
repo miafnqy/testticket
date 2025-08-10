@@ -3,6 +3,34 @@
 use Laravel\Sanctum\Sanctum;
 use \App\Models\User;
 
+it('a user can be signed up', function () {
+    $response = $this->postJson('/api/signup', [
+        'name' => fake()->name,
+        'email' => fake()->unique()->safeEmail,
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ])
+        ->assertStatus(\Symfony\Component\HttpFoundation\Response::HTTP_CREATED)
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'email_verified_at',
+                'created_at',
+                'updated_at',
+            ],
+            'auth' => [
+                'token',
+            ],
+        ]);
+    $this->assertDatabaseHas('users', [
+        'id' => $response['data']['id'],
+        'name' => $response['data']['name'],
+        'email' => $response['data']['email'],
+    ]);
+});
+
 it('a user can\'t be logged in with invalid credentials', function () {
 
     $user = User::factory()->create();
