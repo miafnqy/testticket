@@ -18,7 +18,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::cacheFor(60*60*24)->paginate());
+        return UserResource::collection(User::cacheFor(60*60*24)->with([
+            'role' => function ($query) {
+                $query->cacheFor(60*60*24)->get();
+            }
+        ])->paginate());
     }
 
     /**
