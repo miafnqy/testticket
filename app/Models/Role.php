@@ -6,11 +6,21 @@ use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rennokki\QueryCache\Traits\QueryCacheable;
 
 class Role extends Model
 {
-    use HasFactory;
+    use HasFactory, QueryCacheable;
     protected $fillable = ['name', 'priority'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($role) {
+            static::flushQueryCache();
+        });
+    }
 
     public function isAdmin(): bool
     {
