@@ -1,10 +1,13 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use \Symfony\Component\HttpFoundation\Response;
 use \App\Models\User;
 use \App\Models\Role;
 use \App\Enums\UserRole;
 use function Pest\Laravel\actingAs;
+
+uses(RefreshDatabase::class);
 
 it('unauthorized users can\'t access /api/roles', function () {
     $this->getJson('/api/roles')

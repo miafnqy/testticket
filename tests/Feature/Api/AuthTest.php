@@ -1,7 +1,10 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use \App\Models\User;
+
+uses(RefreshDatabase::class);
 
 it('a user can be signed up', function () {
     $response = $this->postJson('/api/signup', [

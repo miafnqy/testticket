@@ -1,14 +1,13 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use function Pest\Laravel\actingAs;
 use \Symfony\Component\HttpFoundation\Response;
 use \App\Models\User;
 use \App\Models\Role;
 use \App\Enums\UserRole;
 
-beforeEach(function () {
-    \Illuminate\Support\Facades\Artisan::call('migrate:fresh --seed');
-});
+uses(RefreshDatabase::class);
 
 it('unauthorized users can\'t access /api/users', function () {
     $response = $this->get('/api/users', [
