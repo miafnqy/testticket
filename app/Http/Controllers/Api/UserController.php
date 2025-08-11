@@ -8,6 +8,8 @@ use App\Http\Requests\Api\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Benchmark;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +20,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::paginate());
+        return Benchmark::measure(fn() => Cache::remember('users.index_page_' . request()->get('page'), now()->addMinutes(1), function () {
+            return UserResource::collection(User::paginate());
+        }));
     }
 
     /**
