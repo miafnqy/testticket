@@ -20,30 +20,24 @@ export default {
             email: '',
             password: '',
             message: null,
+            token: null,
             error: null,
         };
     },
     methods: {
         async handleLogin() {
             try {
-                // axios.defaults.withCredentials = true;
-                const response =  (await axios.get('/sanctum/csrf-cookie'));
-                await axios.post('/login', {
+                (await axios.get('/sanctum/csrf-cookie'));
+                await axios.post('/api/login', {
                     email: this.email,
                     password: this.password,
                 })
                     .then(response => {
-                        console.log(response);
-                        // const access_token = response.data.data.token;
-                        // axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+                        this.token = response.data.data.token;
+                        localStorage.setItem('api_token', this.token);
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
                         this.message = response.data.message
-                        const data = axios.get('/api/users')
-                            .then(response => console.log(response));
                 });
-                // const { data } = await api.get('/user');
-                // console.log('Authenticated user:', data);
-                // this.error = null;
-                // Redirect or update UI accordingly
             } catch (e) {
                 this.error = 'Login failed. Please check your credentials.';
             }
