@@ -1,7 +1,7 @@
 <template>
     <div class="flex shadow px-28 flex-col">
         <h1 class="font-bold pb-8 mx-auto">User List</h1>
-        <ul class="w-1/2 flex flex-col text-sm mr-auto p-28">
+        <ul class=" flex flex-col text-sm mr-auto p-28">
             <li v-for="user in users" :key="user.id" class="px-3 py-1 flex">
                 <span class="px-2">{{ user.name }}</span> - <i class="px-3">{{ user.email }}</i>
                 <router-link :to="`/users/${user.id}/edit`" class="ml-auto border border-gray-300 rounded-full text-xs px-3 py-0">Edit</router-link>
@@ -34,11 +34,12 @@ export default {
             ],
         };
     },
+    mounted() {
+
+    },
     async created() {
-        (await axios.get('/sanctum/csrf-cookie'));
         const response = await axios.get('/api/users');
-        console.log(response);
-        // this.users = response.data;
+        this.users = response.data.data;
     },
     methods: {
         async deleteUser(id) {

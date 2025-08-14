@@ -5,7 +5,7 @@ import UserList from "./components/UserList.vue";
 import router from './router';
 window.axios = axios;
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('api_token')}`;
 
 const app = createApp(App);
 app.use(router);

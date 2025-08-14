@@ -35,7 +35,6 @@ export default {
                     .then(response => {
                         this.token = response.data.data.token;
                         localStorage.setItem('api_token', this.token);
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
                         this.message = response.data.message
                 });
             } catch (e) {
