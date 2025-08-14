@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col">
+    <div class="flex shadow px-28 flex-col">
         <h1 class="font-bold pb-8 mx-auto">User List</h1>
         <ul class="w-1/2 flex flex-col text-sm mr-auto p-28">
             <li v-for="user in users" :key="user.id" class="px-3 py-1 flex">
@@ -35,11 +35,13 @@ export default {
         };
     },
     async created() {
+        (await axios.get('/sanctum/csrf-cookie'));
         const response = await axios.get('/api/users');
-        this.users = response.data;
+        console.log(response);
+        // this.users = response.data;
     },
     methods: {
-        async deleteProduct(id) {
+        async deleteUser(id) {
             if (confirm('Are you sure you want to delete this product?')) {
                 await axios.delete(`/api/users/${id}`);
                 this.users = this.users.filter(user => user.id !== id);

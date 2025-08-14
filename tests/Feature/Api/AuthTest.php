@@ -38,7 +38,7 @@ it('a user can\'t be logged in with invalid credentials', function () {
 
     $user = User::factory()->create();
 
-    $response = $this->post('/api/login', [
+    $response = $this->postJson('/api/login', [
         'email' => $user->email,
         'password' => 'invalid-password',
     ]);
@@ -52,7 +52,7 @@ it('a user can\'t be logged in with invalid credentials', function () {
 it('a user can be logged in', function () {
     $user = User::factory()->create();
 
-    $response = $this->post('/api/login', [
+    $response = $this->postJson('/api/login', [
         'email' => $user->email,
         'password' => 'password',
     ]);
@@ -67,7 +67,7 @@ it('a user can be logged in', function () {
 it ('a user can be logged out', function () {
     $user = User::factory()->create();
 
-    $response = $this->post('/api/login', [
+    $response = $this->postJson('/api/login', [
         'email' => $user->email,
         'password' => 'password',
     ]);
