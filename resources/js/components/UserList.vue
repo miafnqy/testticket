@@ -8,7 +8,7 @@
                 <button @click="deleteUser(user.id)" class="ml-5 border border-gray-300 rounded-full text-xs px-3 py-0">Delete</button>
             </li>
         </ul>
-        <div v-if="['manager', 'admin'].includes(this.user.role.name)" class="py-12 px-28">
+        <div v-if="authenticated && ['manager', 'admin'].includes(this.user.role.name)" class="py-12 px-28">
             <div class="border flex justify-center w-1/2 border-gray-500 rounded-full">
                 <router-link to="/users/create" class="">Create New User</router-link>
             </div>
@@ -19,32 +19,33 @@
 <script>
 // import axios from 'axios';
 
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     data() {
         return {
-            users: [],
+            //
         };
     },
     mounted() {
 
     },
     computed: {
-        ...mapGetters(['authenticated', 'user'])
+        ...mapGetters(['authenticated', 'user', 'users'])
     },
     async created() {
         await axios.get('/api/users')
             .then(response => {
-                this.users = response.data.data;;
+                this.setUsers(response.data.data);
             })
             .catch(e => console.log(e.toString()));
     },
     methods: {
+        ...mapActions(['setUsers']),
         async deleteUser(id) {
             if (confirm('Are you sure you want to delete this product?')) {
                 await axios.delete(`/api/users/${id}`);
-                this.users = this.users.filter(user => user.id !== id);
+                // this.users = this.users.filter(user => user.id !== id);
             }
         },
     },

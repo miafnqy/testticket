@@ -5,6 +5,7 @@ const store = createStore({
     state: {
         authenticated: !!localStorage.getItem('api_token'),
         user: JSON.parse(localStorage.getItem('authenticatedUser')),
+        users: null,
     },
     mutations: {
         setAuthenticated(state, value) {
@@ -13,8 +14,13 @@ const store = createStore({
         setUser(state, user) {
             state.user = user;
         },
+        setUsers(state, users) {
+            state.users = users;
+        },
         logout(state) {
             state.authenticated = false;
+            state.user = null;
+            state.users = null;
         }
     },
     actions: {
@@ -24,6 +30,9 @@ const store = createStore({
         setUser({ commit }, user) {
             commit('setUser', user);
         },
+        setUsers({ commit }, users) {
+            commit('setUsers', users);
+        },
         logout({ commit }) {
             commit('logout');
         }
@@ -31,6 +40,7 @@ const store = createStore({
     getters: {
         authenticated: (state) => state.authenticated,
         user: (state) => state.user,
+        users: (state) => state.users,
     }
 });
 
