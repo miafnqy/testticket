@@ -42,12 +42,23 @@ export default {
                         localStorage.setItem('api_token', this.token);
                         this.login();
                         this.message = response.data.message;
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('api_token')}`;
+                        this.setAuthenticatedUser();
                 });
             } catch (e) {
                 this.error = 'Login failed. Please check your credentials.';
             }
         },
-        ...mapActions(['login', 'logout']),
+
+        ...mapActions(['login', 'logout', 'setUser']),
+
+        setAuthenticatedUser() {
+            axios.get('/api/user').then(response => {
+                const userData = response.data.data;
+                localStorage.setItem('authenticatedUser', JSON.stringify(userData));
+                this.setUser(userData);
+            });
+        },
     },
 };
 </script>

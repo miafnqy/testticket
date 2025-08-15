@@ -213,6 +213,33 @@ it ('an admin can delete any user', function () {
     $this->assertDatabaseMissing('users', ['id' => $manager->id]);
 });
 
+it ('returns currently authenticated user with their role', function () {
+    $user = User::factory()->create();
+    $role = $user->role;
+
+    actingAs($user, 'sanctum');
+
+    $this->getJson('/api/user')
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJson([
+            'data' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'priority' => $role->priority,
+                ]
+            ]
+        ]);
+});
+
+it ('unauthorized users can get logged in user', function () {
+
+    $this->getJson('/api/user')
+        ->assertStatus(Response::HTTP_UNAUTHORIZED);
+});
 
 
 

@@ -77,4 +77,9 @@ class UserController extends Controller
 
         $user->delete();
     }
+
+    public function user(Request $request)
+    {
+        return new UserResource($request->user()->load(['role']));
+    }
 }

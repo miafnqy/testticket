@@ -8,7 +8,7 @@
                 <button @click="deleteUser(user.id)" class="ml-5 border border-gray-300 rounded-full text-xs px-3 py-0">Delete</button>
             </li>
         </ul>
-        <div v-if="authenticated" class="py-12 px-28">
+        <div v-if="['manager', 'admin'].includes(this.user.role.name)" class="py-12 px-28">
             <div class="border flex justify-center w-1/2 border-gray-500 rounded-full">
                 <router-link to="/users/create" class="">Create New User</router-link>
             </div>
@@ -31,11 +31,14 @@ export default {
 
     },
     computed: {
-        ...mapGetters(['authenticated'])
+        ...mapGetters(['authenticated', 'user'])
     },
     async created() {
-        const response = await axios.get('/api/users');
-        this.users = response.data.data;
+        await axios.get('/api/users')
+            .then(response => {
+                this.users = response.data.data;;
+            })
+            .catch(e => console.log(e.toString()));
     },
     methods: {
         async deleteUser(id) {

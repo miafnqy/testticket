@@ -11,3 +11,4 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 Route::apiResource('roles', RoleController::class)->middleware('auth:sanctum');
+Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum');
