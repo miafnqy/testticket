@@ -41,11 +41,17 @@ export default {
             .catch(e => console.log(e.toString()));
     },
     methods: {
-        ...mapActions(['setUsers']),
+        ...mapActions(['setUsers', 'removeUser', 'logout']),
         async deleteUser(id) {
             if (confirm('Are you sure you want to delete this product?')) {
-                await axios.delete(`/api/users/${id}`);
-                // this.users = this.users.filter(user => user.id !== id);
+                await axios.delete(`/api/users/${id}`)
+                    .then(response => {
+                        this.removeUser(id);
+                        if (this.user.id === id) {
+                            this.logout();
+                            localStorage.clear();
+                        }
+                    });
             }
         },
     },

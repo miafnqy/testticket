@@ -17,6 +17,9 @@ const store = createStore({
         setUsers(state, users) {
             state.users = users;
         },
+        removeUser(state, userId) {
+            state.users = state.users.filter(user => user.id !== userId);
+        },
         logout(state) {
             state.authenticated = false;
             state.user = null;
@@ -32,6 +35,9 @@ const store = createStore({
         },
         setUsers({ commit }, users) {
             commit('setUsers', users);
+        },
+        removeUser({ commit }, userId) {
+            commit('removeUser', userId);
         },
         logout({ commit }) {
             commit('logout');
