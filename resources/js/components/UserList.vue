@@ -4,8 +4,17 @@
         <ul class=" flex flex-col text-sm mr-auto px-28">
             <li v-for="user in users" :key="user.id" class="py-1 flex">
                 <span>{{ user.name }}</span> - <i class="px-3">{{ user.email }}</i>
-                <router-link :to="`/users/${user.id}/edit`" class="ml-auto border border-gray-300 rounded-full text-xs px-3 py-0">Edit</router-link>
-                <button @click="deleteUser(user.id)" class="ml-5 border border-gray-300 rounded-full text-xs px-3 py-0">Delete</button>
+                <button
+                    :disabled="!canUpdate(user)"
+                    :class="{'border-red-500': !canUpdate(user)}"
+                    class="ml-auto border border-gray-300 rounded-full text-xs px-3 py-0"
+                >Edit</button>
+                <button
+                    :disabled="!canUpdate(user)"
+                    @click="deleteUser(user.id)"
+                    :class="{'border-red-500': !canUpdate(user)}"
+                    class="ml-5 border border-gray-300 rounded-full text-xs px-3 py-0"
+                >Delete</button>
             </li>
         </ul>
         <div v-if="authenticated && ['manager', 'admin'].includes(this.user.role.name)" class="py-12 px-28">
@@ -53,6 +62,17 @@ export default {
                         }
                     });
             }
+        },
+        canUpdate(user) {
+            if (this.user.role.id === 1) {
+                return true;
+            }
+
+            if (user.id === this.user.id) {
+                return true;
+            }
+
+            return false;
         },
     },
 };
