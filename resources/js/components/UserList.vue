@@ -22,18 +22,20 @@
                 <router-link to="/users/create" class="">Create New User</router-link>
             </div>
         </div>
+        <Paginate :links="links"></Paginate>
     </div>
 </template>
 
 <script>
 // import axios from 'axios';
-
+import Paginate from "./Paginate.vue";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
+    components: {Paginate},
     data() {
         return {
-            //
+            links: []
         };
     },
     mounted() {
@@ -43,14 +45,26 @@ export default {
         ...mapGetters(['authenticated', 'user', 'users'])
     },
     async created() {
-        await axios.get('/api/users')
-            .then(response => {
-                this.setUsers(response.data.data);
-            })
-            .catch(e => console.log(e.toString()));
+
+    },
+    watch: {
+        '$route.query.page': {
+            immediate: true,
+            handler(newPage) {
+                this.getUsers();
+            }
+        }
     },
     methods: {
         ...mapActions(['setUsers', 'removeUser', 'logout']),
+        async getUsers() {
+            await axios.get('/api/users?' + new URLSearchParams(this.$route.query).toString())
+                .then(response => {
+                    this.setUsers(response.data.data);
+                    this.links = response.data.links;
+                })
+                .catch(e => console.log(e.toString()));
+        },
         async deleteUser(id) {
             if (confirm('Are you sure you want to delete this product?')) {
                 await axios.delete(`/api/users/${id}`)

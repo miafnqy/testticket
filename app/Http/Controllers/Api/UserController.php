@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreUserRequest;
 use App\Http\Requests\Api\UpdateUserRequest;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,11 +19,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::cacheFor(60*60*24)->with([
+        return new UserCollection(User::cacheFor(60*60*24)->with([
             'role' => function ($query) {
                 $query->cacheFor(60*60*24)->get();
             }
-        ])->paginate());
+        ])->paginate()->setPath('/users'));
     }
 
     /**

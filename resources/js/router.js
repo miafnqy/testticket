@@ -14,7 +14,6 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(), // Use HTML5 History Mode for clean URLs
     routes,
-    linkActiveClass: 'font-bold',
 });
 
 export default router;
