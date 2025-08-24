@@ -23,7 +23,7 @@ class UserController extends Controller
             'role' => function ($query) {
                 $query->cacheFor(60*60*24)->get();
             }
-        ])->paginate()->setPath('/users'));
+        ])->paginate());
     }
 
     /**
