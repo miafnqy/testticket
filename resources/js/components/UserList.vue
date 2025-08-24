@@ -22,7 +22,7 @@
                 <router-link to="/users/create" class="">Create New User</router-link>
             </div>
         </div>
-        <Paginate :links="links"></Paginate>
+        <Paginate :links="links" v-if="users"></Paginate>
     </div>
 </template>
 
@@ -51,7 +51,9 @@ export default {
         '$route.query.page': {
             immediate: true,
             handler(newPage) {
-                this.getUsers();
+                if (this.authenticated) {
+                    this.getUsers();
+                }
             }
         }
     },
