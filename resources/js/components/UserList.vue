@@ -23,6 +23,26 @@
             </div>
         </div>
         <Paginate :links="links" v-if="users"></Paginate>
+        <teleport to="body">
+            <div class="fixed inset-0 size-full bg-black/75 flex justify-center items-center">
+                <div class="rounded-lg bg-white p-9 flex flex-col justify-center items-center">
+                    <h1 class="pb-3">Hello, World!</h1>
+                    <form @submit.prevent="submitForm" class="flex flex-col">
+                        <div class="py-2 flex justify-between">
+                            <label for="name" class="pr-3">Name:</label>
+                            <input class="rounded-full border border-gray-500 px-5" id="name" v-model="user.name" type="text" required />
+                        </div>
+
+                        <div class="py-2 pb-5 flex justify-between">
+                            <label for="email" class="pr-3">Email:</label>
+                            <input class="rounded-full border border-gray-500 px-5" id="email" v-model="user.email" type="email" required />
+                        </div>
+
+                        <button type="submit" class="border border-gray-300 rounded-full text-xs px-3 py-2">Update</button>
+                    </form>
+                </div>
+            </div>
+        </teleport>
     </div>
 </template>
 
@@ -84,11 +104,7 @@ export default {
                 return true;
             }
 
-            if (user.id === this.user.id) {
-                return true;
-            }
-
-            return false;
+            return user.id === this.user.id;
         },
     },
 };
