@@ -17,6 +17,14 @@ const store = createStore({
         setUsers(state, users) {
             state.users = users;
         },
+        updateUser(state, updatedUser) {
+            const index = state.users.findIndex(user => user.id === updatedUser.id);
+
+            state.users.splice(index, 1, {
+                ...state.users[index],
+                ...updatedUser
+            });
+        },
         removeUser(state, userId) {
             state.users = state.users.filter(user => user.id !== userId);
         },
@@ -35,6 +43,9 @@ const store = createStore({
         },
         setUsers({ commit }, users) {
             commit('setUsers', users);
+        },
+        updateUser({ commit }, userData) {
+            commit('updateUser', userData);
         },
         removeUser({ commit }, userId) {
             commit('removeUser', userId);

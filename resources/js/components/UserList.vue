@@ -3,7 +3,7 @@
         <h1 class="font-bold pb-8 mx-auto">User List</h1>
         <ul class=" flex flex-col text-sm mr-auto px-28">
             <li v-for="user in users" :key="user.id" class="py-1 flex">
-                <span>{{ user.name }}</span> - <i class="px-3">{{ user.email }}</i>
+                <span class="px-3">{{ user.name }}</span> - <i class="px-3">{{ user.email }}</i>
                 <button
                     :disabled="!canUpdate(user)"
                     :class="{'border-red-500': !canUpdate(user)}"
@@ -41,7 +41,7 @@ export default {
     data() {
         return {
             links: [],
-            editingUser: false,
+            editingUser: null,
         };
     },
     mounted() {
@@ -96,7 +96,7 @@ export default {
             this.editingUser = user;
         },
         closeModal() {
-            this.editingUser = false;
+            this.editingUser = null;
         }
     },
 };

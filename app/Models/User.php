@@ -45,6 +45,10 @@ class User extends Authenticatable
             static::flushQueryCache();
         });
 
+        static::updated(function ($user) {
+            static::flushQueryCache();
+        });
+
         static::deleted(function ($user) {
             static::flushQueryCache();
         });
