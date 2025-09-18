@@ -3,7 +3,7 @@
         <nav class="flex w-full py-8">
             <router-link class="mx-1" to="/" active-class="font-bold">Home</router-link>
             <router-link class="mx-1" to="/users" active-class="font-bold">Users</router-link>
-            <router-link v-if="this.user.role.name === 'admin'" class="mx-1" to="/roles" active-class="font-bold">Roles</router-link>
+            <router-link v-if="this.user && this.user.role.name === 'admin'" class="mx-1" to="/roles" active-class="font-bold">Roles</router-link>
             <router-link v-if="!this.authenticated" class="mx-1 ml-auto" to="/login" active-class="font-bold">Login</router-link>
             <button v-if="this.authenticated" @click="handleLogout" class="mx-1 ml-auto cursor-pointer" to="/logout">Logout</button>
 
