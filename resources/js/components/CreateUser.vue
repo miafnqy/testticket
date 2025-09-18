@@ -29,6 +29,8 @@
 
 <script>
     import Modal from "./Modal.vue";
+    import {mapActions} from "vuex";
+
     export default {
         components: {Modal},
 
@@ -48,6 +50,9 @@
         },
 
         methods: {
+            ...mapActions({
+                addUserToStore: 'addUser'
+            }),
             async createUser() {
                 await axios.post('/api/users', {
                     name: this.form.name,
@@ -55,7 +60,7 @@
                     role_id: this.form.role,
                 })
                     .then(response => {
-                        // this.updateUserInStore(response.data.data);
+                        this.addUserToStore(response.data.data);
                         this.close();
                     });
             },

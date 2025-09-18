@@ -14,6 +14,9 @@ const store = createStore({
         setUser(state, user) {
             state.user = user;
         },
+        addUser(state, user) {
+            state.users.push(user);
+        },
         setUsers(state, users) {
             state.users = users;
         },
@@ -40,6 +43,9 @@ const store = createStore({
         },
         setUser({ commit }, user) {
             commit('setUser', user);
+        },
+        addUser({ commit }, user) {
+            commit('addUser', user);
         },
         setUsers({ commit }, users) {
             commit('setUsers', users);
