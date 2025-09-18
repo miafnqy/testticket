@@ -20,6 +20,14 @@ class Role extends Model
         static::created(function ($role) {
             static::flushQueryCache();
         });
+
+        static::updated(function ($role) {
+            static::flushQueryCache();
+        });
+
+        static::deleted(function ($role) {
+            static::flushQueryCache();
+        });
     }
 
     public function isAdmin(): bool

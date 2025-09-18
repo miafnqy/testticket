@@ -61,6 +61,11 @@
                 })
                     .then(response => {
                         this.addUserToStore(response.data.data);
+                        this.form = {
+                            name: null,
+                            email: null,
+                            role: null,
+                        };
                         this.close();
                     });
             },
