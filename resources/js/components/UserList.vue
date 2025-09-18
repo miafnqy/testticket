@@ -20,12 +20,13 @@
         </ul>
         <div v-if="authenticated && ['manager', 'admin'].includes(this.user.role.name)" class="py-12 px-28">
             <div class="border flex justify-center w-1/2 border-gray-500 rounded-full">
-                <router-link to="/users/create" class="">Create New User</router-link>
+                <button @click="openCreateUserModal()">Create New User</button>
             </div>
         </div>
         <Paginate :links="links" v-if="users"></Paginate>
         <teleport to="body">
-            <Modal :user="editingUser" @close="closeModal"></Modal>
+            <EditUser :show="editingUser != null" :user="editingUser" @close="closeModal"></EditUser>
+            <CreateUser :show="creatingUser" @close="closeModal">test</CreateUser>
         </teleport>
     </div>
 </template>
@@ -34,14 +35,16 @@
 // import axios from 'axios';
 import Paginate from "./Paginate.vue";
 import {mapActions, mapGetters} from "vuex";
-import Modal from "./Modal.vue";
+import CreateUser from "./CreateUser.vue";
+import EditUser from "./EditUser.vue";
 
 export default {
-    components: {Modal, Paginate},
+    components: {CreateUser, EditUser, Paginate},
     data() {
         return {
             links: [],
             editingUser: null,
+            creatingUser: false,
         };
     },
     mounted() {
@@ -95,8 +98,12 @@ export default {
         openEditModal(user) {
             this.editingUser = user;
         },
+        openCreateUserModal() {
+            this.creatingUser = true;
+        },
         closeModal() {
             this.editingUser = null;
+            this.creatingUser = false;
         }
     },
 };
