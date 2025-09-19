@@ -5,8 +5,8 @@ namespace Database\Seeders;
 use App\Enums\UserRole;
 use App\Models\Role;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
                 return Role::factory()->create(['name' => $role->name(), 'priority' => $role->priority()]);
             });
 
-         User::factory(100)->recycle($roles)->create();
+        User::factory()->create(['role_id' => 1, 'name' => 'admin', 'email' => 'admin@admin.com', 'password' => Hash::make('password')]);
+
+         User::factory(10000)->recycle($roles)->create();
     }
 }
